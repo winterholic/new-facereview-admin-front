@@ -4,6 +4,7 @@ import type {
   GetVideoRequestsResponse,
   GetCommentsResponse,
   SystemStatusResponse,
+  BusinessStatsResponse,
   MessageResponse,
   Role,
   VideoRequestStatus,
@@ -76,3 +77,8 @@ export const deleteComment = (commentId: string) =>
 
 export const getSystemStatus = () =>
   api.get<SystemStatusResponse>('/v2/admin/system/status');
+
+// ---- Business stats ----
+
+export const getBusinessStats = () =>
+  api.get<BusinessStatsResponse>('/v2/admin/dashboard/business-stats');

@@ -107,6 +107,43 @@ export interface SystemStatusResponse {
   checked_at: string;
 }
 
+export interface SignupTrendPoint {
+  date: string;
+  count: number;
+}
+
+export interface VideoRequestPipeline {
+  pending_count: number;
+  avg_processing_minutes: number;
+}
+
+export interface CategoryPopularity {
+  category: string;
+  view_count: number;
+}
+
+export interface EmotionDistribution {
+  neutral: number;
+  happy: number;
+  surprise: number;
+  sad: number;
+  angry: number;
+}
+
+export interface ContentHealth {
+  avg_completion_rate: number;
+  emotion_distribution: EmotionDistribution;
+  category_top5: CategoryPopularity[];
+}
+
+export interface BusinessStatsResponse {
+  signup_trend: SignupTrendPoint[];
+  weekly_active_users: number;
+  video_request_pipeline: VideoRequestPipeline;
+  content_health: ContentHealth;
+  computed_at: string;
+}
+
 export interface LoginResponse {
   access_token: string;
 }
