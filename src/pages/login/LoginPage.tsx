@@ -49,6 +49,7 @@ const LoginPage = (): ReactElement => {
   return (
     <div className="login-page">
       <form className="login-page__panel" onSubmit={handleSubmit}>
+        <img src="/logo.svg" alt="" className="login-page__logo" />
         <h1 className="login-page__title font-title-large">FaceReview Admin</h1>
         <TextInput
           label="이메일"

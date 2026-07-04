@@ -1,8 +1,17 @@
+@use 'variables' as *;
+
 // Admin-only layout tokens (not present in the reference facereview-front design system)
 $sidebar-width: 240px;
 $topbar-height: 64px;
 $content-max-width: 1280px;
 
-$status-pending: #ffb84d;
-$status-accepted: #76ffce;
-$status-rejected: #ff6b4b;
+// Admin brand accent scale (warm gradient, distinct from the multicolor logo/category
+// palette in _variables.scss) — used for severity/status emphasis in this admin UI only.
+$accent-brown: #8a5847;
+$accent-peach: #ff9871;
+$accent-coral: #f47263;
+$accent-red: #e84855;
+
+$status-pending: $accent-peach;
+$status-accepted: $primary-basic;
+$status-rejected: $accent-red;

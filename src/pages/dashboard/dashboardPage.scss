@@ -1,15 +1,5 @@
 @use '../../styles/abstracts' as *;
 
-.dashboard-page__subtitle {
-  color: $gray-400;
-  margin-top: 4px;
-  margin-bottom: 24px;
-}
-
-.dashboard-page__loading {
-  color: $gray-400;
-}
-
 .dashboard-page__empty {
   color: $gray-400;
 }
@@ -23,49 +13,81 @@
   }
 }
 
-.dashboard-page__kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 32px;
-}
+// ── Overview strip (system status + KPI, compact, no boxed cards) ──
 
-.kpi-card {
+.overview-strip {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 24px;
-  border-radius: 14px;
+  gap: 14px;
+  margin: 20px 0 32px;
+  padding: 16px 20px;
+  border-radius: 12px;
   border: 1px solid $gray-80;
   background-color: $gray-50;
 }
 
-.kpi-card__label {
+.overview-strip__row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.overview-strip__row--connections {
+  padding-bottom: 14px;
+  border-bottom: 1px solid $gray-80;
+}
+
+.overview-strip__connection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: $gray-400;
 }
 
-.kpi-card__value {
-  color: $primary-basic;
-}
-
-.kpi-card__hint {
+.overview-strip__sysmetrics {
   color: $gray-300;
 }
 
-.dashboard-page__two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
+.overview-strip__muted {
+  color: $gray-400;
+}
 
-  @include mobile {
-    grid-template-columns: 1fr;
+.kpi-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 24px;
+  border-right: 1px solid $gray-80;
+
+  &:last-child {
+    padding-right: 0;
+    border-right: none;
   }
 }
+
+.kpi-stat__label {
+  color: $gray-400;
+  white-space: nowrap;
+
+  em {
+    font-style: normal;
+    color: $gray-300;
+    margin-left: 4px;
+  }
+}
+
+.kpi-stat__value {
+  color: $primary-basic;
+}
+
+// ── Bar lists ──
 
 .bar-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-width: 640px;
 }
 
 .bar-list__row {
@@ -93,11 +115,11 @@
 }
 
 .bar-list__fill--brand {
-  background-color: $brand-blue;
+  background-color: $accent-coral;
 }
 
 .bar-list__fill--emotion {
-  background-color: $brand-purple;
+  background-color: $accent-peach;
 }
 
 .bar-list__value {
@@ -105,60 +127,16 @@
   text-align: right;
 }
 
-.dashboard-page__system {
-  margin-top: 16px;
-  padding: 16px 20px;
-  border-radius: 12px;
-  border: 1px solid $gray-80;
-
-  summary {
-    cursor: pointer;
-    color: $gray-400;
-  }
-}
-
-.dashboard-page__system-body {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.dashboard-page__grid {
+.dashboard-page__two-col {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-}
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
 
-.stat-card {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid $gray-80;
-  background-color: $gray-50;
-}
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
 
-.stat-card__label {
-  color: $gray-400;
-}
-
-.stat-card__value {
-  color: $gray-900;
-}
-
-.dashboard-page__connections {
-  display: flex;
-  gap: 16px;
-}
-
-.connection-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: 1px solid $gray-80;
-  background-color: $gray-50;
+  .bar-list {
+    max-width: none;
+  }
 }

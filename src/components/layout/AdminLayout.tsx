@@ -34,7 +34,10 @@ const AdminLayout = (): ReactElement => {
   return (
     <div className="admin-layout">
       <aside className="admin-sidebar">
-        <div className="admin-sidebar__logo font-title-small">FaceReview Admin</div>
+        <div className="admin-sidebar__logo">
+          <img src="/logo.svg" alt="" className="admin-sidebar__logo-mark" />
+          <span className="font-title-mini">Admin</span>
+        </div>
         <nav className="admin-sidebar__nav">
           {NAV_ITEMS.map((item) => (
             <NavLink

@@ -15,9 +15,18 @@
 }
 
 .admin-sidebar__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 20px;
   border-bottom: 1px solid $gray-80;
-  color: $primary-basic;
+  color: $gray-900;
+}
+
+.admin-sidebar__logo-mark {
+  width: 28px;
+  height: auto;
+  flex-shrink: 0;
 }
 
 .admin-sidebar__nav {
@@ -80,7 +89,8 @@
 
 .admin-content {
   flex: 1;
-  padding: 24px 32px;
+  padding: 24px 32px 40px;
   max-width: $content-max-width;
   width: 100%;
+  margin: 0 auto;
 }
