@@ -1,0 +1,28 @@
+@use '../../styles/abstracts' as *;
+
+.text-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.text-input__label {
+  color: $gray-400;
+}
+
+.text-input__field {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid $gray-100;
+  background-color: $gray-50;
+  color: $gray-900;
+
+  &::placeholder {
+    color: $gray-300;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $primary-basic;
+  }
+}

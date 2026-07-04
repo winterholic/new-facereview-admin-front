@@ -1,0 +1,72 @@
+@use '../../styles/abstracts' as *;
+
+.confirm-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background-color: $system-dim-black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.confirm-modal__panel {
+  width: 420px;
+  max-width: calc(100vw - 32px);
+  background-color: $gray-50;
+  border: 1px solid $gray-100;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.confirm-modal__title {
+  color: $gray-900;
+  margin-bottom: 8px;
+}
+
+.confirm-modal__description {
+  color: $gray-400;
+  margin-bottom: 16px;
+}
+
+.confirm-modal__body {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.confirm-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.confirm-modal__button {
+  padding: 10px 18px;
+  border-radius: 8px;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.confirm-modal__button--cancel {
+  color: $gray-400;
+  border: 1px solid $gray-100;
+
+  &:hover:not(:disabled) {
+    color: $gray-900;
+  }
+}
+
+.confirm-modal__button--primary {
+  background-color: $primary-basic;
+  color: $bg;
+}
+
+.confirm-modal__button--danger {
+  background-color: $system-error;
+  color: $gray-900;
+}

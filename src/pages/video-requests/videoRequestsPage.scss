@@ -1,0 +1,45 @@
+@use '../../styles/abstracts' as *;
+
+.video-requests-page__filters {
+  margin: 20px 0;
+}
+
+.video-requests-page__select {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid $gray-100;
+  background-color: $gray-50;
+  color: $gray-900;
+}
+
+.video-requests-page__link {
+  color: $brand-blue;
+  text-decoration: underline;
+}
+
+.video-requests-page__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.video-requests-page__action-button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid $gray-100;
+  color: $gray-400;
+  white-space: nowrap;
+
+  &:hover {
+    color: $gray-900;
+    border-color: $gray-200;
+  }
+
+  &--approve:hover {
+    color: $primary-basic;
+    border-color: $primary-basic;
+  }
+}
+
+.video-requests-page__comment {
+  color: $gray-400;
+}

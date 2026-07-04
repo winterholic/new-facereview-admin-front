@@ -1,0 +1,39 @@
+@use '../../styles/abstracts' as *;
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+
+  &--pending {
+    color: $status-pending;
+    background-color: rgba(255, 184, 77, 0.15);
+  }
+
+  &--accepted {
+    color: $status-accepted;
+    background-color: $primary-02;
+  }
+
+  &--rejected {
+    color: $status-rejected;
+    background-color: rgba(255, 107, 75, 0.15);
+  }
+
+  &--brand {
+    color: $primary-basic;
+    background-color: $primary-02;
+  }
+
+  &--neutral {
+    color: $gray-400;
+    background-color: $gray-80;
+  }
+
+  &--danger {
+    color: $system-error;
+    background-color: rgba(231, 77, 77, 0.15);
+  }
+}

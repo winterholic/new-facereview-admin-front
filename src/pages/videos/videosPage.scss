@@ -1,0 +1,38 @@
+@use '../../styles/abstracts' as *;
+
+.videos-page__filters {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  margin: 20px 0;
+
+  .text-input {
+    width: 280px;
+  }
+}
+
+.videos-page__select {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid $gray-100;
+  background-color: $gray-50;
+  color: $gray-900;
+  height: 41px;
+}
+
+.videos-page__action-button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid $gray-100;
+  color: $gray-400;
+
+  &:hover:not(:disabled) {
+    color: $system-error;
+    border-color: $system-error;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
