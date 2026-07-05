@@ -48,7 +48,7 @@ export const getVideoRequests = (params: {
 
 export const approveVideoRequest = (
   requestId: string,
-  data: { youtube_title: string; channel_name: string; duration: number },
+  data: { youtube_title: string; channel_name: string; duration: number; category: string },
 ) =>
   api.post<{ video_id: string; message: string }>(
     `/v2/admin/video-requests/${requestId}/approve`,

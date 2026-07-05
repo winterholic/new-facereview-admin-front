@@ -30,7 +30,6 @@ export interface AdminVideoRequest {
   user_name: string;
   youtube_url: string;
   youtube_full_url: string;
-  category: string;
   status: VideoRequestStatus;
   admin_comment: string;
   created_at: string;

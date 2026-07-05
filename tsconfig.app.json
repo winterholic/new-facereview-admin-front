@@ -23,7 +23,8 @@
       "pages/*": ["./src/pages/*"],
       "types": ["./src/types/index.ts"],
       "types/*": ["./src/types/*"],
-      "styles/*": ["./src/styles/*"]
+      "styles/*": ["./src/styles/*"],
+      "constants/*": ["./src/constants/*"]
     },
 
     /* Linting */

@@ -11,6 +11,7 @@ import Pagination from 'components/Pagination/Pagination';
 import StatusChip from 'components/StatusChip/StatusChip';
 import TextInput from 'components/TextInput/TextInput';
 import ConfirmModal from 'components/ConfirmModal/ConfirmModal';
+import { CATEGORY_OPTIONS } from 'constants/category';
 
 import './videoRequestsPage.scss';
 
@@ -42,6 +43,7 @@ const VideoRequestsPage = (): ReactElement => {
   const [youtubeTitle, setYoutubeTitle] = useState('');
   const [channelName, setChannelName] = useState('');
   const [durationSeconds, setDurationSeconds] = useState('');
+  const [category, setCategory] = useState('');
 
   const [rejectTarget, setRejectTarget] = useState<AdminVideoRequest | null>(null);
   const [rejectComment, setRejectComment] = useState('');
@@ -61,6 +63,7 @@ const VideoRequestsPage = (): ReactElement => {
         youtube_title: youtubeTitle,
         channel_name: channelName,
         duration: Number(durationSeconds),
+        category,
       }),
     onSuccess: () => {
       toast.success('영상 요청을 승인했습니다.');
@@ -85,6 +88,7 @@ const VideoRequestsPage = (): ReactElement => {
     setYoutubeTitle('');
     setChannelName('');
     setDurationSeconds('');
+    setCategory('');
   };
   const closeApproveModal = () => setApproveTarget(null);
 
@@ -109,7 +113,6 @@ const VideoRequestsPage = (): ReactElement => {
         </a>
       ),
     },
-    { key: 'category', header: '카테고리', render: (row) => row.category },
     {
       key: 'status',
       header: '상태',
@@ -210,6 +213,20 @@ const VideoRequestsPage = (): ReactElement => {
           value={durationSeconds}
           onChange={(event) => setDurationSeconds(event.target.value)}
         />
+        <label className="video-requests-page__category-label font-label-small">
+          카테고리
+          <select
+            className="video-requests-page__select font-body-medium"
+            value={category}
+            onChange={(event) => setCategory(event.target.value)}>
+            <option value="">선택</option>
+            {CATEGORY_OPTIONS.map((value) => (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </label>
       </ConfirmModal>
 
       <ConfirmModal

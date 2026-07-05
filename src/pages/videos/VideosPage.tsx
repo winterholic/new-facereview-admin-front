@@ -10,27 +10,9 @@ import Pagination from 'components/Pagination/Pagination';
 import StatusChip from 'components/StatusChip/StatusChip';
 import TextInput from 'components/TextInput/TextInput';
 import ConfirmModal from 'components/ConfirmModal/ConfirmModal';
+import { CATEGORY_OPTIONS } from 'constants/category';
 
 import './videosPage.scss';
-
-const CATEGORY_OPTIONS = [
-  'drama',
-  'eating',
-  'travel',
-  'cook',
-  'show',
-  'information',
-  'game',
-  'sports',
-  'music',
-  'animal',
-  'beauty',
-  'comedy',
-  'horror',
-  'exercise',
-  'vlog',
-  'etc',
-];
 
 const VideosPage = (): ReactElement => {
   const queryClient = useQueryClient();

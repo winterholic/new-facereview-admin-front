@@ -43,3 +43,14 @@
 .video-requests-page__comment {
   color: $gray-400;
 }
+
+.video-requests-page__category-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: $gray-400;
+
+  .video-requests-page__select {
+    width: 100%;
+  }
+}
