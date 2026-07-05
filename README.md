@@ -1,32 +1,87 @@
-# React + TypeScript + Vite
+# FaceReview Admin
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+[FaceReview](https://github.com/winterholic/facereview-refactor-back) 서비스의 운영자용 관리자 페이지. 회원·영상·영상 등록 요청·댓글을 관리하고, 서비스 운영 상태와 핵심 비즈니스 지표를 대시보드에서 확인합니다.
 
-Currently, two official plugins are available:
+- 백엔드: [`facereview-refactor-back`](https://github.com/winterholic/facereview-refactor-back)
+- 기획 문서: [`docs/PLANNING.md`](docs/PLANNING.md)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 스크린샷
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 대시보드
 
-## Expanding the Oxlint configuration
+시스템 상태(MongoDB/MySQL/Redis, CPU·메모리·디스크, API 응답시간·에러율)와 핵심 비즈니스 지표(신규가입 추이, 시청 감정 분포, 카테고리별 조회수)를 한눈에 보여줍니다. 신규가입 추이는 최근 7일/30일/3달/1년/3년 기간을 선택해 조회할 수 있습니다.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+![대시보드](docs/screenshots/dashboard.png)
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+### 회원 관리
+
+이름/이메일 검색, 상태(활성/탈퇴) 필터로 회원을 조회하고 비활성화 처리를 할 수 있습니다. 권한 컬럼에는 GENERAL/ADMIN/SUPER_ADMIN이 표시되며, 회원 권한(ADMIN 지정·해제) 변경은 SUPER_ADMIN 계정에서만 가능합니다.
+
+![회원 관리](docs/screenshots/users.png)
+
+### 영상 관리
+
+전체 20,000여 건의 영상을 제목/채널명 검색, 카테고리 필터로 조회하고 삭제(논리 삭제)할 수 있습니다.
+
+![영상 관리](docs/screenshots/videos.png)
+
+### 영상 요청 관리
+
+사용자가 등록을 요청한 유튜브 영상 목록을 상태(대기중/승인/거절)별로 확인하고, 제목·채널명·길이·카테고리를 입력해 승인하거나 사유를 남기고 거절할 수 있습니다.
+
+![영상 요청 관리](docs/screenshots/video-requests.png)
+
+### 댓글 관리
+
+영상별/키워드/삭제 여부로 댓글을 검색하고 부적절한 댓글을 삭제(논리 삭제)할 수 있습니다.
+
+![댓글 관리](docs/screenshots/comments.png)
+
+---
+
+## 주요 기능
+
+- **인증**: 별도 관리자 계정 체계 없이 FaceReview 일반 회원 계정의 `role` 필드(GENERAL/ADMIN/SUPER_ADMIN)로 접근 제어. 로그인 후 ADMIN 이상이 아니면 즉시 로그아웃 처리
+- **대시보드**: 시스템 상태 실시간 모니터링 + WAU·평균 완주율·신규가입 추이(기간 선택)·카테고리별 조회수·시청 감정 분포 등 비즈니스 지표
+- **회원 관리**: 검색/필터, 비활성화, 권한 변경(SUPER_ADMIN 전용)
+- **영상 관리**: 검색/필터, 삭제
+- **영상 요청 관리**: 상태 필터, 승인/거절 처리
+- **댓글 관리**: 검색/필터, 삭제
+
+## 기술 스택
+
+- **Frontend**: React 19, TypeScript, Vite, React Router v7
+- **상태/데이터**: Zustand(인증 상태), TanStack Query(서버 상태)
+- **차트**: Nivo (Bar/Line/Pie)
+- **스타일**: SCSS (FaceReview 서비스와 동일한 다크 디자인 토큰 재사용)
+- **HTTP**: Axios (401 시 refresh 토큰 기반 자동 재발급 인터셉터)
+- **배포**: Vercel
+
+## 프로젝트 구조
+
+```
+src/
+  api/            # axios 인스턴스, 도메인별 API 함수 (auth, admin)
+  components/     # 공용 컴포넌트 (DataTable, Pagination, ConfirmModal, StatusChip 등)
+  pages/          # 화면 단위 (login, dashboard, users, videos, video-requests, comments)
+  store/          # zustand 스토어 (인증)
+  styles/         # SCSS 디자인 토큰 및 공용 스타일
+  types/          # API 응답 타입
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## 실행 방법
+
+```bash
+npm install
+cp .env.example .env.local   # VITE_API_BASE_URL 등 설정
+npm run dev
+```
+
+| 명령어 | 설명 |
+|---|---|
+| `npm run dev` | 개발 서버 실행 |
+| `npm run build` | 타입 체크 + 프로덕션 빌드 |
+| `npm run preview` | 빌드 결과 미리보기 |
+| `npm run lint` | Oxlint 실행 |
