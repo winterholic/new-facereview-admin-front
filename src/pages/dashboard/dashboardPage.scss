@@ -112,9 +112,11 @@
 
 // ── Charts: 2-col row (trend + emotion) + full-width row (category) ──
 
+// 시청감정분포는 도넛(180px)+간격(28px)+범례(120px)+좌우패딩(40px)=368px면 내용이 다 들어가므로
+// 그 실측값(+여유)만큼만 고정폭으로 주고, 데이터가 많아 넓은 폭이 필요한 신규가입추이가 나머지를 가져간다.
 .chart-row-two {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 400px;
   flex-shrink: 0;
   gap: 20px;
   margin-bottom: 16px;
