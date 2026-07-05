@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { ResponsiveLine } from '@nivo/line';
 import { ResponsiveBar } from '@nivo/bar';
 import { ResponsivePie } from '@nivo/pie';
@@ -16,8 +17,23 @@ const CONNECTION_LABEL: Record<string, string> = {
   mongodb: 'MongoDB',
 };
 
+const getErrorMessage = (error: unknown): string => {
+  if (isAxiosError(error)) {
+    const status = error.response?.status;
+    const serverMessage = (error.response?.data as { message?: string } | undefined)?.message;
+    return `${status ?? '네트워크 오류'}${serverMessage ? ` - ${serverMessage}` : ` - ${error.message}`}`;
+  }
+  return error instanceof Error ? error.message : '알 수 없는 오류';
+};
+
 const DashboardPage = (): ReactElement => {
-  const { data: stats, isLoading: statsLoading } = useQuery({
+  const {
+    data: stats,
+    isLoading: statsLoading,
+    isError: statsIsError,
+    error: statsError,
+    refetch: refetchStats,
+  } = useQuery({
     queryKey: ['admin', 'business-stats'],
     queryFn: async () => (await getBusinessStats()).data,
     refetchInterval: 60000,
@@ -94,7 +110,14 @@ const DashboardPage = (): ReactElement => {
         </div>
 
         <div className="overview-strip__row overview-strip__row--kpi">
-          {statsLoading || !stats ? (
+          {statsIsError ? (
+            <span className="font-label-small overview-strip__error">
+              비즈니스 지표 로드 실패 ({getErrorMessage(statsError)}){' '}
+              <button type="button" className="overview-strip__retry" onClick={() => refetchStats()}>
+                다시 시도
+              </button>
+            </span>
+          ) : statsLoading || !stats ? (
             <span className="font-label-small overview-strip__muted">불러오는 중...</span>
           ) : (
             <>
