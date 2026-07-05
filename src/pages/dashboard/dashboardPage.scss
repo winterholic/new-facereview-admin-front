@@ -1,25 +1,12 @@
 @use '../../styles/abstracts' as *;
 
-.dashboard-page__empty {
-  color: $gray-400;
-}
-
-.dashboard-page__section {
-  margin-bottom: 32px;
-
-  h3 {
-    color: $gray-900;
-    margin-bottom: 12px;
-  }
-}
-
 // ── Overview strip (system status + KPI, compact, no boxed cards) ──
 
 .overview-strip {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin: 20px 0 32px;
+  margin: 20px 0 28px;
   padding: 16px 20px;
   border-radius: 12px;
   border: 1px solid $gray-80;
@@ -66,6 +53,17 @@
   }
 }
 
+.kpi-stat--link {
+  border-radius: 8px;
+  padding: 4px 24px 4px 8px;
+  margin: -4px 0 -4px -8px;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: $gray-80;
+  }
+}
+
 .kpi-stat__label {
   color: $gray-400;
   white-space: nowrap;
@@ -81,62 +79,75 @@
   color: $primary-basic;
 }
 
-// ── Bar lists ──
+// ── Chart grid (3 balanced panels) ──
 
-.bar-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 640px;
-}
-
-.bar-list__row {
+.chart-grid {
   display: grid;
-  grid-template-columns: 64px 1fr 56px;
-  align-items: center;
-  gap: 10px;
-}
-
-.bar-list__label {
-  color: $gray-400;
-}
-
-.bar-list__track {
-  height: 10px;
-  border-radius: 999px;
-  background-color: $gray-80;
-  overflow: hidden;
-}
-
-.bar-list__fill {
-  height: 100%;
-  background-color: $primary-basic;
-  border-radius: 999px;
-}
-
-.bar-list__fill--brand {
-  background-color: $accent-coral;
-}
-
-.bar-list__fill--emotion {
-  background-color: $accent-peach;
-}
-
-.bar-list__value {
-  color: $gray-600;
-  text-align: right;
-}
-
-.dashboard-page__two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 
   @include mobile {
     grid-template-columns: 1fr;
   }
+}
 
-  .bar-list {
-    max-width: none;
+.chart-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid $gray-80;
+  background-color: $gray-50;
+
+  h3 {
+    color: $gray-900;
+    margin-bottom: 16px;
   }
+}
+
+.chart-panel__body {
+  height: 260px;
+}
+
+.chart-panel__body--pie {
+  height: 200px;
+}
+
+.chart-panel__tooltip {
+  padding: 6px 10px;
+  border-radius: 6px;
+  background-color: $gray-80;
+  color: $gray-900;
+  font-size: 12px;
+}
+
+.chart-panel__legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  margin-top: 16px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: $gray-400;
+  }
+}
+
+.chart-panel__legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.chart-panel__legend-value {
+  margin-left: auto;
+  color: $gray-600;
+}
+
+.chart-panel__hint {
+  margin-top: 12px;
+  color: $gray-300;
 }

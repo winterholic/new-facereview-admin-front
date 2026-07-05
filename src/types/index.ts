@@ -130,10 +130,16 @@ export interface EmotionDistribution {
   angry: number;
 }
 
+export interface DominantEmotionCount {
+  emotion: string;
+  video_count: number;
+}
+
 export interface ContentHealth {
   avg_completion_rate: number;
   emotion_distribution: EmotionDistribution;
   category_top5: CategoryPopularity[];
+  dominant_emotion_video_counts: DominantEmotionCount[];
 }
 
 export interface BusinessStatsResponse {

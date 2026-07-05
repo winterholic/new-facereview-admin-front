@@ -1,7 +1,12 @@
 import type { ReactElement } from 'react';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { ResponsiveLine } from '@nivo/line';
+import { ResponsiveBar } from '@nivo/bar';
+import { ResponsivePie } from '@nivo/pie';
 import { getBusinessStats, getSystemStatus } from 'api/admin';
 import StatusChip from 'components/StatusChip/StatusChip';
+import { nivoDarkTheme, EMOTION_COLOR, EMOTION_LABEL } from './nivoTheme';
 
 import './dashboardPage.scss';
 
@@ -9,14 +14,6 @@ const CONNECTION_LABEL: Record<string, string> = {
   mysql: 'MySQL',
   redis: 'Redis',
   mongodb: 'MongoDB',
-};
-
-const EMOTION_LABEL: Record<string, string> = {
-  happy: '기쁨',
-  surprise: '놀람',
-  neutral: '무표정',
-  sad: '슬픔',
-  angry: '분노',
 };
 
 const DashboardPage = (): ReactElement => {
@@ -34,13 +31,38 @@ const DashboardPage = (): ReactElement => {
 
   const todaySignups = stats?.signup_trend.at(-1)?.count ?? 0;
   const weekSignups = stats?.signup_trend.reduce((sum, point) => sum + point.count, 0) ?? 0;
-  const maxSignup = Math.max(1, ...(stats?.signup_trend.map((p) => p.count) ?? [1]));
-  const maxCategoryViews = Math.max(1, ...(stats?.content_health.category_top5.map((c) => c.view_count) ?? [1]));
-  const emotionEntries = stats
-    ? (Object.entries(stats.content_health.emotion_distribution) as [string, number][]).sort(
-        (a, b) => b[1] - a[1],
-      )
+
+  const signupLineData = stats
+    ? [
+        {
+          id: '신규가입',
+          data: stats.signup_trend.map((point) => ({
+            x: point.date.slice(5),
+            y: point.count,
+          })),
+        },
+      ]
     : [];
+
+  const categoryBarData = stats
+    ? [...stats.content_health.category_top5].reverse().map((c) => ({
+        category: c.category,
+        view_count: c.view_count,
+      }))
+    : [];
+
+  const emotionPieData = stats
+    ? (Object.entries(stats.content_health.emotion_distribution) as [string, number][])
+        .sort((a, b) => b[1] - a[1])
+        .map(([emotion, ratio]) => ({
+          id: EMOTION_LABEL[emotion] ?? emotion,
+          label: EMOTION_LABEL[emotion] ?? emotion,
+          value: Math.round(ratio * 1000) / 10,
+          color: EMOTION_COLOR[emotion] ?? '#5D5D6D',
+        }))
+    : [];
+
+  const dominantCounts = stats?.content_health.dominant_emotion_video_counts ?? [];
 
   return (
     <div className="dashboard-page">
@@ -94,86 +116,112 @@ const DashboardPage = (): ReactElement => {
                 </span>
                 <span className="kpi-stat__value font-title-mini">{todaySignups}</span>
               </div>
-              <div className="kpi-stat">
+              <Link to="/video-requests?status=PENDING" className="kpi-stat kpi-stat--link">
                 <span className="kpi-stat__label font-label-small">
                   영상요청 대기 <em>(평균 {stats.video_request_pipeline.avg_processing_minutes.toFixed(0)}분)</em>
                 </span>
                 <span className="kpi-stat__value font-title-mini">
                   {stats.video_request_pipeline.pending_count}
                 </span>
-              </div>
+              </Link>
             </>
           )}
         </div>
       </div>
 
       {!statsLoading && stats && (
-        <>
-          <section className="dashboard-page__section">
+        <div className="chart-grid">
+          <section className="chart-panel">
             <h3 className="font-title-mini">신규가입 추이 (최근 7일)</h3>
-            <div className="bar-list">
-              {stats.signup_trend.map((point) => (
-                <div key={point.date} className="bar-list__row">
-                  <span className="bar-list__label font-label-small">{point.date.slice(5)}</span>
-                  <div className="bar-list__track">
-                    <div
-                      className="bar-list__fill"
-                      style={{ width: `${(point.count / maxSignup) * 100}%` }}
-                    />
-                  </div>
-                  <span className="bar-list__value font-label-small">{point.count}</span>
-                </div>
-              ))}
+            <div className="chart-panel__body">
+              <ResponsiveLine
+                data={signupLineData}
+                theme={nivoDarkTheme}
+                colors={['#76FFCE']}
+                margin={{ top: 16, right: 20, bottom: 32, left: 32 }}
+                xScale={{ type: 'point' }}
+                yScale={{ type: 'linear', min: 0, max: 'auto' }}
+                curve="monotoneX"
+                axisBottom={{ tickSize: 0, tickPadding: 8 }}
+                axisLeft={{ tickSize: 0, tickPadding: 8, tickValues: 4 }}
+                enableGridX={false}
+                pointSize={8}
+                pointColor={{ theme: 'background' }}
+                pointBorderWidth={2}
+                pointBorderColor={{ from: 'serieColor' }}
+                useMesh
+              />
             </div>
           </section>
 
-          <div className="dashboard-page__two-col">
-            <section className="dashboard-page__section">
-              <h3 className="font-title-mini">카테고리 Top 5 (조회수)</h3>
-              <div className="bar-list">
-                {stats.content_health.category_top5.map((c) => (
-                  <div key={c.category} className="bar-list__row">
-                    <span className="bar-list__label font-label-small">{c.category}</span>
-                    <div className="bar-list__track">
-                      <div
-                        className="bar-list__fill bar-list__fill--brand"
-                        style={{ width: `${(c.view_count / maxCategoryViews) * 100}%` }}
-                      />
-                    </div>
-                    <span className="bar-list__value font-label-small">
-                      {c.view_count.toLocaleString()}
-                    </span>
+          <section className="chart-panel">
+            <h3 className="font-title-mini">카테고리 Top 5 (조회수)</h3>
+            <div className="chart-panel__body">
+              <ResponsiveBar
+                data={categoryBarData}
+                theme={nivoDarkTheme}
+                keys={['view_count']}
+                indexBy="category"
+                layout="horizontal"
+                colors={['#F47263']}
+                margin={{ top: 8, right: 24, bottom: 32, left: 70 }}
+                padding={0.35}
+                borderRadius={4}
+                axisBottom={{ tickSize: 0, tickPadding: 8 }}
+                axisLeft={{ tickSize: 0, tickPadding: 8 }}
+                enableGridY={false}
+                enableLabel={false}
+                tooltip={({ indexValue, value }) => (
+                  <div className="chart-panel__tooltip">
+                    {indexValue}: {value.toLocaleString()}
                   </div>
-                ))}
-                {stats.content_health.category_top5.length === 0 && (
-                  <p className="dashboard-page__empty font-body-medium">데이터가 없습니다.</p>
                 )}
-              </div>
-            </section>
+              />
+            </div>
+          </section>
 
-            <section className="dashboard-page__section">
-              <h3 className="font-title-mini">시청 감정 분포</h3>
-              <div className="bar-list">
-                {emotionEntries.map(([emotion, ratio]) => (
-                  <div key={emotion} className="bar-list__row">
-                    <span className="bar-list__label font-label-small">
-                      {EMOTION_LABEL[emotion] ?? emotion}
-                    </span>
-                    <div className="bar-list__track">
-                      <div
-                        className="bar-list__fill bar-list__fill--emotion"
-                        style={{ width: `${ratio * 100}%` }}
-                      />
-                    </div>
-                    <span className="bar-list__value font-label-small">
-                      {(ratio * 100).toFixed(1)}%
-                    </span>
+          <section className="chart-panel">
+            <h3 className="font-title-mini">시청 감정 분포</h3>
+            <div className="chart-panel__body chart-panel__body--pie">
+              <ResponsivePie
+                data={emotionPieData}
+                theme={nivoDarkTheme}
+                colors={{ datum: 'data.color' }}
+                margin={{ top: 8, right: 8, bottom: 8, left: 8 }}
+                innerRadius={0.65}
+                padAngle={1.5}
+                cornerRadius={3}
+                borderWidth={1}
+                borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
+                enableArcLinkLabels={false}
+                arcLabel={(d) => `${d.value}%`}
+                arcLabelsTextColor="#15151D"
+                tooltip={({ datum }) => (
+                  <div className="chart-panel__tooltip">
+                    {datum.label}: {datum.value}%
                   </div>
-                ))}
-              </div>
-            </section>
-          </div>
-        </>
+                )}
+              />
+            </div>
+            <ul className="chart-panel__legend">
+              {emotionPieData.map((d) => (
+                <li key={d.id}>
+                  <span className="chart-panel__legend-dot" style={{ backgroundColor: d.color }} />
+                  <span className="font-label-small">{d.label}</span>
+                  <span className="font-label-small chart-panel__legend-value">{d.value}%</span>
+                </li>
+              ))}
+            </ul>
+            {dominantCounts.length > 0 && (
+              <p className="chart-panel__hint font-label-small">
+                대표 감정 기준 영상 수:{' '}
+                {dominantCounts
+                  .map((d) => `${EMOTION_LABEL[d.emotion] ?? d.emotion} ${d.video_count}개`)
+                  .join(' · ')}
+              </p>
+            )}
+          </section>
+        </div>
       )}
     </div>
   );

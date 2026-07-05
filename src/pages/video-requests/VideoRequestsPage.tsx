@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { ReactElement } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { getVideoRequests, approveVideoRequest, rejectVideoRequest } from 'api/admin';
@@ -26,9 +27,15 @@ const STATUS_CHIP: Record<VideoRequestStatus, { label: string; tone: 'pending' |
   REJECTED: { label: '거절됨', tone: 'rejected' },
 };
 
+const VALID_STATUSES: VideoRequestStatus[] = ['PENDING', 'ACCEPTED', 'REJECTED'];
+
 const VideoRequestsPage = (): ReactElement => {
   const queryClient = useQueryClient();
-  const [status, setStatus] = useState<VideoRequestStatus | ''>('');
+  const [searchParams] = useSearchParams();
+  const initialStatus = searchParams.get('status');
+  const [status, setStatus] = useState<VideoRequestStatus | ''>(
+    VALID_STATUSES.includes(initialStatus as VideoRequestStatus) ? (initialStatus as VideoRequestStatus) : '',
+  );
   const [page, setPage] = useState(1);
 
   const [approveTarget, setApproveTarget] = useState<AdminVideoRequest | null>(null);
