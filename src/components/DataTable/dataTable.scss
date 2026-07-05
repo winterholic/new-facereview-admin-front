@@ -2,9 +2,20 @@
 
 .data-table {
   width: 100%;
-  overflow-x: auto;
+  overflow: auto;
   border: 1px solid $gray-80;
   border-radius: 12px;
+  // NOTE: 목록 페이지가 flex column(높이 100%)일 때 이 컴포넌트가 남는 공간을 채우고,
+  // 페이지 자체가 아니라 표 내부에서만 스크롤되도록 함(스크롤이 필요한 극단적인 경우의
+  // 안전장치 — 페이지 크기를 화면에 맞게 줄여둬서 평소엔 거의 발동 안 함).
+  flex: 1;
+  min-height: 0;
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background-color: $gray-50;
+  }
 
   table {
     width: 100%;

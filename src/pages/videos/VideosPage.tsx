@@ -29,7 +29,7 @@ const VideosPage = (): ReactElement => {
           keyword: keyword || undefined,
           category: category || undefined,
           page,
-          size: 20,
+          size: 10,
         })
       ).data,
   });

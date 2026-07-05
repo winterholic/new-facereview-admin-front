@@ -51,7 +51,7 @@ const VideoRequestsPage = (): ReactElement => {
   const { data, isLoading } = useQuery({
     queryKey: ['admin', 'video-requests', { status, page }],
     queryFn: async () =>
-      (await getVideoRequests({ status: status || undefined, page, size: 20 })).data,
+      (await getVideoRequests({ status: status || undefined, page, size: 10 })).data,
   });
 
   const invalidate = () =>

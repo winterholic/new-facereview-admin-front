@@ -1,6 +1,18 @@
 @use '../../styles/abstracts' as *;
 
+.video-requests-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+
+  > h2 {
+    flex-shrink: 0;
+  }
+}
+
 .video-requests-page__filters {
+  flex-shrink: 0;
   margin: 20px 0;
 }
 

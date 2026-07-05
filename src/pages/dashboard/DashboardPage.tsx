@@ -228,36 +228,38 @@ const DashboardPage = (): ReactElement => {
 
             <section className="chart-panel">
               <h3 className="font-title-mini">시청 감정 분포</h3>
-              <div className="chart-panel__body chart-panel__body--pie">
-                <ResponsivePie
-                  data={emotionPieData}
-                  theme={nivoDarkTheme}
-                  colors={{ datum: 'data.color' }}
-                  margin={{ top: 8, right: 8, bottom: 8, left: 8 }}
-                  innerRadius={0.65}
-                  padAngle={1.5}
-                  cornerRadius={3}
-                  borderWidth={1}
-                  borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
-                  enableArcLinkLabels={false}
-                  arcLabel={(d) => `${d.value}%`}
-                  arcLabelsTextColor="#15151D"
-                  tooltip={({ datum }) => (
-                    <div className="chart-panel__tooltip">
-                      {datum.label}: {datum.value}%
-                    </div>
-                  )}
-                />
+              <div className="chart-panel__pie-row">
+                <div className="chart-panel__body chart-panel__body--pie">
+                  <ResponsivePie
+                    data={emotionPieData}
+                    theme={nivoDarkTheme}
+                    colors={{ datum: 'data.color' }}
+                    margin={{ top: 8, right: 8, bottom: 8, left: 8 }}
+                    innerRadius={0.65}
+                    padAngle={1.5}
+                    cornerRadius={3}
+                    borderWidth={1}
+                    borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
+                    enableArcLinkLabels={false}
+                    arcLabel={(d) => `${d.value}%`}
+                    arcLabelsTextColor="#15151D"
+                    tooltip={({ datum }) => (
+                      <div className="chart-panel__tooltip">
+                        {datum.label}: {datum.value}%
+                      </div>
+                    )}
+                  />
+                </div>
+                <ul className="chart-panel__legend chart-panel__legend--side">
+                  {emotionPieData.map((d) => (
+                    <li key={d.id}>
+                      <span className="chart-panel__legend-dot" style={{ backgroundColor: d.color }} />
+                      <span className="font-label-small">{d.label}</span>
+                      <span className="font-label-small chart-panel__legend-value">{d.value}%</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="chart-panel__legend">
-                {emotionPieData.map((d) => (
-                  <li key={d.id}>
-                    <span className="chart-panel__legend-dot" style={{ backgroundColor: d.color }} />
-                    <span className="font-label-small">{d.label}</span>
-                    <span className="font-label-small chart-panel__legend-value">{d.value}%</span>
-                  </li>
-                ))}
-              </ul>
               {dominantCounts.length > 0 && (
                 <p className="chart-panel__hint font-label-small">
                   대표 감정 기준 영상 수:{' '}

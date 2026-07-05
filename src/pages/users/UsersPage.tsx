@@ -36,7 +36,7 @@ const UsersPage = (): ReactElement => {
           keyword: keyword || undefined,
           is_deleted: isDeletedFilter === '' ? undefined : isDeletedFilter === 'true',
           page,
-          size: 20,
+          size: 10,
         })
       ).data,
   });
