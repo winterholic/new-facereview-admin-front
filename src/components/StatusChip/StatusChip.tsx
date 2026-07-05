@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 
 import './statusChip.scss';
 
-export type ChipTone = 'pending' | 'accepted' | 'rejected' | 'brand' | 'neutral' | 'danger';
+export type ChipTone = 'pending' | 'accepted' | 'rejected' | 'brand' | 'neutral' | 'danger' | 'super';
 
 interface StatusChipProps {
   label: string;

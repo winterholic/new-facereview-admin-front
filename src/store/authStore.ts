@@ -1,14 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import HeaderToken from 'api/HeaderToken';
+import type { Role } from 'types';
 
 interface AuthState {
   is_sign_in: boolean;
   user_id: string;
   user_name: string;
+  role: Role | '';
   access_token: string;
   setToken: (access_token: string) => void;
-  setUser: (props: { user_id: string; user_name: string }) => void;
+  setUser: (props: { user_id: string; user_name: string; role: Role }) => void;
   clearAuth: () => void;
 }
 
@@ -16,6 +18,7 @@ const initialState = {
   is_sign_in: false,
   user_id: '',
   user_name: '',
+  role: '' as Role | '',
   access_token: '',
 };
 
@@ -24,8 +27,8 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       ...initialState,
       setToken: (access_token) => set({ access_token }),
-      setUser: ({ user_id, user_name }) =>
-        set({ is_sign_in: true, user_id, user_name }),
+      setUser: ({ user_id, user_name, role }) =>
+        set({ is_sign_in: true, user_id, user_name, role }),
       clearAuth: () => {
         HeaderToken.set(null);
         set(initialState);
@@ -40,6 +43,7 @@ export const useAuthStore = create<AuthState>()(
         is_sign_in: state.is_sign_in,
         user_id: state.user_id,
         user_name: state.user_name,
+        role: state.role,
         access_token: state.access_token,
       }),
       onRehydrateStorage: () => (state) => {

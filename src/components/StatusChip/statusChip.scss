@@ -36,4 +36,9 @@
     color: $system-error;
     background-color: rgba(231, 77, 77, 0.15);
   }
+
+  &--super {
+    color: $accent-brown;
+    background-color: rgba(138, 88, 71, 0.2);
+  }
 }

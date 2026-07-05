@@ -29,13 +29,13 @@ const LoginPage = (): ReactElement => {
       HeaderToken.set(loginData.access_token);
 
       const { data: me } = await getMe();
-      if (me.role !== 'ADMIN') {
+      if (me.role !== 'ADMIN' && me.role !== 'SUPER_ADMIN') {
         clearAuth();
         toast.error('관리자 권한이 없습니다.');
         return;
       }
 
-      setUser({ user_id: me.user_id, user_name: me.name });
+      setUser({ user_id: me.user_id, user_name: me.name, role: me.role });
       navigate('/', { replace: true });
     } catch (err) {
       console.error(err);

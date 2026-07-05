@@ -10,6 +10,7 @@ import Pagination from 'components/Pagination/Pagination';
 import StatusChip from 'components/StatusChip/StatusChip';
 import TextInput from 'components/TextInput/TextInput';
 import ConfirmModal from 'components/ConfirmModal/ConfirmModal';
+import { useAuthStore } from 'store/authStore';
 
 import './usersPage.scss';
 
@@ -21,6 +22,7 @@ const DEACTIVATED_FILTER_OPTIONS = [
 
 const UsersPage = (): ReactElement => {
   const queryClient = useQueryClient();
+  const isSuperAdmin = useAuthStore((state) => state.role === 'SUPER_ADMIN');
   const [keyword, setKeyword] = useState('');
   const [isDeletedFilter, setIsDeletedFilter] = useState('');
   const [page, setPage] = useState(1);
@@ -72,8 +74,8 @@ const UsersPage = (): ReactElement => {
       header: '권한',
       render: (row) => (
         <StatusChip
-          label={row.role === 'ADMIN' ? 'ADMIN' : 'GENERAL'}
-          tone={row.role === 'ADMIN' ? 'brand' : 'neutral'}
+          label={row.role}
+          tone={row.role === 'SUPER_ADMIN' ? 'super' : row.role === 'ADMIN' ? 'brand' : 'neutral'}
         />
       ),
     },
@@ -106,17 +108,19 @@ const UsersPage = (): ReactElement => {
             onClick={() => setDeactivateTarget(row)}>
             비활성화
           </button>
-          <button
-            type="button"
-            className="users-page__action-button font-label-small"
-            onClick={() =>
-              roleMutation.mutate({
-                userId: row.user_id,
-                role: row.role === 'ADMIN' ? 'GENERAL' : 'ADMIN',
-              })
-            }>
-            {row.role === 'ADMIN' ? 'ADMIN 해제' : 'ADMIN 지정'}
-          </button>
+          {isSuperAdmin && row.role !== 'SUPER_ADMIN' && (
+            <button
+              type="button"
+              className="users-page__action-button font-label-small"
+              onClick={() =>
+                roleMutation.mutate({
+                  userId: row.user_id,
+                  role: row.role === 'ADMIN' ? 'GENERAL' : 'ADMIN',
+                })
+              }>
+              {row.role === 'ADMIN' ? 'ADMIN 해제' : 'ADMIN 지정'}
+            </button>
+          )}
         </div>
       ),
     },
