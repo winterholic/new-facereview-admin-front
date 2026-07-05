@@ -5,6 +5,8 @@ import type {
   GetCommentsResponse,
   SystemStatusResponse,
   BusinessStatsResponse,
+  SignupTrendResponse,
+  SignupTrendPeriod,
   MessageResponse,
   Role,
   VideoRequestStatus,
@@ -82,3 +84,6 @@ export const getSystemStatus = () =>
 
 export const getBusinessStats = () =>
   api.get<BusinessStatsResponse>('/v2/admin/dashboard/business-stats');
+
+export const getSignupTrend = (period: SignupTrendPeriod) =>
+  api.get<SignupTrendResponse>('/v2/admin/dashboard/signup-trend', { params: { period } });

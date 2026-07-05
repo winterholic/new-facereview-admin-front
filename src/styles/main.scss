@@ -2,6 +2,15 @@
 @use 'base/reset';
 @use 'base/typography';
 
+// NOTE: 복사해온 reset.scss의 box-sizing:border-box 목록에 main이 빠져 있어서(원본
+// facereview-front는 <main> 태그를 안 씀), .admin-content의 패딩이 너비에 더해져
+// 뷰포트보다 넓어지는 가로 스크롤 버그가 있었음 — 전역 border-box로 근본 해결.
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body {
   font-family:

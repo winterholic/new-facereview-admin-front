@@ -111,6 +111,13 @@ export interface SignupTrendPoint {
   count: number;
 }
 
+export type SignupTrendPeriod = '7d' | '30d' | '3m' | '1y' | '3y';
+
+export interface SignupTrendResponse {
+  points: SignupTrendPoint[];
+  granularity: 'day' | 'week' | 'month';
+}
+
 export interface VideoRequestPipeline {
   pending_count: number;
   avg_processing_minutes: number | null;
