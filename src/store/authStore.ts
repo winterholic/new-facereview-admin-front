@@ -33,14 +33,20 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'admin-auth-storage',
-      // access_token is intentionally excluded — it lives in memory only. On reload the
-      // first API call has no Authorization header, 401s, and the axios interceptor
-      // (api/index.ts) transparently refreshes it via the httpOnly refresh cookie.
+      // NOTE: access_token도 함께 저장(사용자 요청) — 새로고침 직후 첫 요청이 401→재발급을
+      // 한 번 거치는 대신 곧바로 Authorization 헤더를 채워 200으로 가도록. 토큰이 만료된
+      // 뒤에는 여전히 axios 인터셉터(api/index.ts)가 401→reissue로 정상 처리함.
       partialize: (state) => ({
         is_sign_in: state.is_sign_in,
         user_id: state.user_id,
         user_name: state.user_name,
+        access_token: state.access_token,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.access_token) {
+          HeaderToken.set(state.access_token);
+        }
+      },
     },
   ),
 );
