@@ -113,7 +113,7 @@ export interface SignupTrendPoint {
 
 export interface VideoRequestPipeline {
   pending_count: number;
-  avg_processing_minutes: number;
+  avg_processing_minutes: number | null;
 }
 
 export interface CategoryPopularity {

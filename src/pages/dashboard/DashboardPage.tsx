@@ -141,7 +141,14 @@ const DashboardPage = (): ReactElement => {
               </div>
               <Link to="/video-requests?status=PENDING" className="kpi-stat kpi-stat--link">
                 <span className="kpi-stat__label font-label-small">
-                  영상요청 대기 <em>(평균 {stats.video_request_pipeline.avg_processing_minutes.toFixed(0)}분)</em>
+                  영상요청 대기{' '}
+                  <em>
+                    (평균{' '}
+                    {stats.video_request_pipeline.avg_processing_minutes === null
+                      ? '최근 처리 이력 없음'
+                      : `${stats.video_request_pipeline.avg_processing_minutes.toFixed(0)}분`}
+                    )
+                  </em>
                 </span>
                 <span className="kpi-stat__value font-title-mini">
                   {stats.video_request_pipeline.pending_count}
