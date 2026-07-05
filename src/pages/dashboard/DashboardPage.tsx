@@ -9,7 +9,7 @@ import { ResponsivePie } from '@nivo/pie';
 import { getBusinessStats, getSignupTrend, getSystemStatus } from 'api/admin';
 import type { SignupTrendPeriod } from 'types';
 import StatusChip from 'components/StatusChip/StatusChip';
-import { nivoDarkTheme, EMOTION_COLOR, EMOTION_LABEL } from './nivoTheme';
+import { nivoDarkTheme, nivoDarkThemeCompactAxis, EMOTION_COLOR, EMOTION_LABEL } from './nivoTheme';
 
 import './dashboardPage.scss';
 
@@ -31,6 +31,22 @@ const formatTrendLabel = (date: string, granularity: 'day' | 'week' | 'month'): 
   const [year, month, day] = date.split('-');
   if (granularity === 'month') return `${year}-${month}`;
   return `${month}-${day}`;
+};
+
+const formatTooltipDate = (date: string, granularity: 'day' | 'week' | 'month'): string => {
+  const [year, month, day] = date.split('-');
+  if (granularity === 'month') return `${year}년 ${Number(month)}월`;
+  if (granularity === 'week') return `${year}년 ${Number(month)}월 ${Number(day)}일 주`;
+  return `${year}년 ${Number(month)}월 ${Number(day)}일`;
+};
+
+const pickThinnedTickValues = (values: string[], maxTicks: number): string[] | undefined => {
+  if (values.length <= maxTicks) return undefined;
+  const step = Math.ceil(values.length / maxTicks);
+  const picked = values.filter((_, index) => index % step === 0);
+  const last = values.at(-1);
+  if (last && picked.at(-1) !== last) picked.push(last);
+  return picked;
 };
 
 const getErrorMessage = (error: unknown): string => {
@@ -77,10 +93,18 @@ const DashboardPage = (): ReactElement => {
           data: trend.points.map((point) => ({
             x: formatTrendLabel(point.date, trend.granularity),
             y: point.count,
+            rawDate: point.date,
           })),
         },
       ]
     : [];
+
+  const signupTickValues = trend
+    ? pickThinnedTickValues(
+        trend.points.map((point) => formatTrendLabel(point.date, trend.granularity)),
+        8,
+      )
+    : undefined;
 
   const categoryBarData = stats
     ? stats.content_health.category_top5.map((c) => ({
@@ -213,7 +237,7 @@ const DashboardPage = (): ReactElement => {
                     xScale={{ type: 'point' }}
                     yScale={{ type: 'linear', min: 0, max: 'auto' }}
                     curve="monotoneX"
-                    axisBottom={{ tickSize: 0, tickPadding: 8, tickRotation: signupLineData[0]?.data.length > 12 ? -45 : 0 }}
+                    axisBottom={{ tickSize: 0, tickPadding: 8, tickRotation: 0, tickValues: signupTickValues }}
                     axisLeft={{ tickSize: 0, tickPadding: 8, tickValues: 4 }}
                     enableGridX={false}
                     pointSize={signupLineData[0]?.data.length > 40 ? 0 : 8}
@@ -221,6 +245,15 @@ const DashboardPage = (): ReactElement => {
                     pointBorderWidth={2}
                     pointBorderColor={{ from: 'serieColor' }}
                     useMesh
+                    tooltip={({ point }) => (
+                      <div className="chart-panel__tooltip">
+                        <strong>
+                          {formatTooltipDate(point.data.rawDate as string, trend?.granularity ?? 'day')}
+                        </strong>
+                        <br />
+                        신규가입 {point.data.y as number}명
+                      </div>
+                    )}
                   />
                 )}
               </div>
@@ -276,14 +309,14 @@ const DashboardPage = (): ReactElement => {
             <div className="chart-panel__body chart-panel__body--wide">
               <ResponsiveBar
                 data={categoryBarData}
-                theme={nivoDarkTheme}
+                theme={nivoDarkThemeCompactAxis}
                 keys={['view_count']}
                 indexBy="category"
                 colors={['#F47263']}
-                margin={{ top: 8, right: 16, bottom: 70, left: 56 }}
+                margin={{ top: 8, right: 16, bottom: 36, left: 56 }}
                 padding={0.35}
                 borderRadius={4}
-                axisBottom={{ tickSize: 0, tickPadding: 8, tickRotation: -40, truncateTickAt: 0 }}
+                axisBottom={{ tickSize: 0, tickPadding: 8, tickRotation: 0, truncateTickAt: 0 }}
                 axisLeft={{ tickSize: 0, tickPadding: 8 }}
                 enableGridY
                 enableLabel={false}

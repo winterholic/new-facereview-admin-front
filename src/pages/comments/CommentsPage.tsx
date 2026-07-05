@@ -128,6 +128,7 @@ const CommentsPage = (): ReactElement => {
           page={data.page}
           hasNext={data.has_next}
           total={data.total}
+          pageSize={10}
           onChange={setPage}
         />
       )}

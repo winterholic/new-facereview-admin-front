@@ -141,10 +141,6 @@
 .chart-panel--wide {
   flex: 1;
   min-height: 120px;
-
-  h3 {
-    margin-bottom: 4px;
-  }
 }
 
 .chart-panel__header {
@@ -185,8 +181,9 @@
 }
 
 .chart-panel__body--pie {
+  width: 180px;
   height: 180px;
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .chart-panel__body--wide {
@@ -197,7 +194,8 @@
 .chart-panel__pie-row {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: flex-start;
+  gap: 28px;
 }
 
 .chart-panel__loading {
@@ -214,6 +212,7 @@
   background-color: $gray-80;
   color: $gray-900;
   font-size: 12px;
+  white-space: nowrap;
 }
 
 .chart-panel__legend {
