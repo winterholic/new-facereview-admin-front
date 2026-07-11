@@ -101,13 +101,15 @@ const UsersPage = (): ReactElement => {
       header: '관리',
       render: (row) => (
         <div className="users-page__actions">
-          <button
-            type="button"
-            className="users-page__action-button font-label-small"
-            disabled={row.is_deleted}
-            onClick={() => setDeactivateTarget(row)}>
-            비활성화
-          </button>
+          {(isSuperAdmin || row.role === 'GENERAL') && (
+            <button
+              type="button"
+              className="users-page__action-button font-label-small"
+              disabled={row.is_deleted}
+              onClick={() => setDeactivateTarget(row)}>
+              비활성화
+            </button>
+          )}
           {isSuperAdmin && row.role !== 'SUPER_ADMIN' && (
             <button
               type="button"
